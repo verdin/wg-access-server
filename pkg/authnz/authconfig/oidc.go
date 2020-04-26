@@ -28,7 +28,7 @@ type OIDCConfig struct {
 }
 
 func (c *OIDCConfig) Provider() *authruntime.Provider {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
 	defer cancel()
 	provider, err := oidc.NewProvider(ctx, c.Issuer)
 	if err != nil {
@@ -85,7 +85,7 @@ func (c *OIDCConfig) callbackHandler(runtime *authruntime.ProviderRuntime, oauth
 
 		state := r.FormValue("state")
 		if s.Nonce == nil || *s.Nonce != state {
-			http.Error(w, "bad nonce", http.StatusBadRequest)
+			http.Error(w, "bad nonce, please try logging in again", http.StatusBadRequest)
 			return
 		}
 
